@@ -46,11 +46,11 @@ elif page == "📊 Optimasi Produksi":
     with st.expander("🔧 PARAMETER PRODUKSI", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
-            st.subheader("Sosis Bakar (x₁)")
+            st.subheader("Pruduk A (x₁)")
             p_a = st.number_input("Keuntungan/unit (Rp)", 500, key="p_a")
             t_a = st.number_input("Waktu produksi (menit)", 2, key="t_a")
         with col2:
-            st.subheader("Baso Bakar (x₂)")
+            st.subheader("Produk B (x₂)")
             p_b = st.number_input("Keuntungan/unit (Rp)", 1000, key="p_b")
             t_b = st.number_input("Waktu produksi (menit)", 3, key="t_b")
         
@@ -97,7 +97,7 @@ elif page == "📊 Optimasi Produksi":
         
         cols = st.columns(2)
         with cols[0]:
-            st.markdown("**Titik A: Hanya Produksi Baso Bakar (x₁=0)**")
+            st.markdown("**Titik A: Hanya Produksi Produk B (x₁=0)**")
             st.latex(fr"""
             \begin{{aligned}}
             &{t_a}(0) + {t_b}x_2 = {total} \\
@@ -108,7 +108,7 @@ elif page == "📊 Optimasi Produksi":
             st.metric("Nilai Z pada Titik A", f"Rp{p_b*titik_A[1]:,.0f}")
         
         with cols[1]:
-            st.markdown("**Titik B: Hanya Produksi Sosis Bakar (x₂=0)**")
+            st.markdown("**Titik B: Hanya Produksi Pruduk A (x₂=0)**")
             st.latex(fr"""
             \begin{{aligned}}
             &{t_a}x_1 + {t_b}(0) = {total} \\
@@ -140,8 +140,8 @@ elif page == "📊 Optimasi Produksi":
         ax.annotate(f'Z= Rp{p_a*titik_B[0]:,.0f}', xy=(titik_B[0],0), xytext=(titik_B[0]-40,20),
                     arrowprops=dict(facecolor='black', shrink=0.05))
         
-        ax.set_xlabel('Jumlah Sosis Bakar (x₁)', fontsize=12)
-        ax.set_ylabel('Jumlah Baso Bakar (x₂)', fontsize=12)
+        ax.set_xlabel('Jumlah Pruduk A (x₁)', fontsize=12)
+        ax.set_ylabel('Jumlah Produk B (x₂)', fontsize=12)
         ax.legend()
         ax.grid(True)
         
@@ -152,8 +152,8 @@ elif page == "📊 Optimasi Produksi":
         st.success(f"""
         ## 🎯 KESIMPULAN SOLUSI OPTIMAL
         **Produksi:**
-        - x₁ (Sosis Bakar) = {0 if optimal_value == p_b*titik_A[1] else titik_B[0]:.0f} unit
-        - x₂ (Baso Bakar) = {titik_A[1] if optimal_value == p_b*titik_A[1] else 0:.0f} unit  
+        - x₁ (Pruduk A) = {0 if optimal_value == p_b*titik_A[1] else titik_B[0]:.0f} unit
+        - x₂ (Produk B) = {titik_A[1] if optimal_value == p_b*titik_A[1] else 0:.0f} unit  
         
         **Keuntungan Maksimum:** Rp{optimal_value:,.0f}
         """)
