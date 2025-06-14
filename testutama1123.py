@@ -38,56 +38,146 @@ if page == "🏠 Beranda":
         - Hitung waktu tunggu
         """)
 
-# =============== HALAMAN OPTIMASI PRODUKSI ===============
+# =============== HALAMAN OPTIMASI PRODUKSI (DETAIL LENGKAP) ===============
 elif page == "📊 Optimasi Produksi":
-    st.title("📈 OPTIMASI PRODUKSI")
+    st.title("📈 OPTIMASI PRODUKSI - BARANG A & B")
     
     # Input Parameter
     with st.expander("🔧 PARAMETER PRODUKSI", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
             st.subheader("Barang A")
-            p_a = st.number_input("Keuntungan/unit (Rp)", 5000, key="p_a")
-            t_a = st.number_input("Waktu produksi (menit)", 30, key="t_a")
+            p_a = st.number_input("Keuntungan/unit (Rp)", 500, key="p_a")
+            t_a = st.number_input("Waktu produksi (menit)", 2, key="t_a")
         with col2:
             st.subheader("Barang B")
-            p_b = st.number_input("Keuntungan/unit (Rp)", 8000, key="p_b")
-            t_b = st.number_input("Waktu produksi (menit)", 45, key="t_b")
+            p_b = st.number_input("Keuntungan/unit (Rp)", 1000, key="p_b")
+            t_b = st.number_input("Waktu produksi (menit)", 3, key="t_b")
         
-        total = st.number_input("Total waktu tersedia (menit)", 480, key="total")
+        total = st.number_input("Total waktu tersedia (menit)", 360, key="total")
     
     # Hitung Solusi
-    if st.button("🧮 HITUNG SOLUSI", type="primary"):
-        # Perhitungan
-        titik_x = total / t_a
-        titik_y = total / t_b
-        optimal = max(p_a * titik_x, p_b * titik_y)
+    if st.button("🧮 HITUNG SOLUSI DETAIL", type="primary"):
+        st.markdown("---")
         
-        # Visualisasi
-        fig, ax = plt.subplots(figsize=(10,6))
-        x = np.linspace(0, titik_x, 100)
-        y = (total - t_a*x)/t_b
-        ax.plot(x, y, 'b-', linewidth=2)
-        ax.fill_between(x, 0, y, alpha=0.1)
-        ax.scatter([0, titik_x], [titik_y, 0], color='red', s=100)
+        # ===== FORMULASI MODEL =====
+        st.header("📝 FORMULASI MODEL MATEMATIKA")
         
-        # Tampilkan Hasil
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Fungsi Tujuan")
+            st.latex(fr"""
+            \text{{Maksimalkan }}
+            \boxed{{
+            Z = {p_a}x_1 + {p_b}x_2
+            }}
+            """)
+        
+        with col2:
+            st.subheader("Sistem Kendala")
+            st.latex(fr"""
+            \boxed{{
+            \begin{{cases}}
+            {t_a}x_1 + {t_b}x_2 \leq {total} \\
+            x_1 \geq 0 \\
+            x_2 \geq 0
+            \end{{cases}}
+            }}
+            """)
+        
+        # ===== PENYELESAIAN METODE GRAFIK =====
+        st.header("📌 PENYELESAIAN METODE GRAFIK")
+        
+        # Hitung titik ekstrim
+        titik_A = (0, total/t_b)  # (0, 120)
+        titik_B = (total/t_a, 0)  # (180, 0)
+        
+        # ===== DETAIL PERHITUNGAN =====
+        st.subheader("🔍 Titik Ekstrim Daerah Layak")
+        
         cols = st.columns(2)
         with cols[0]:
-            st.subheader("Hasil Perhitungan")
-            st.latex(fr"\text{{Maksimum }} Z = {p_a}x + {p_b}y")
-            st.latex(fr"{t_a}x + {t_b}y \leq {total}")
-            st.success(f"Keuntungan Maksimal: Rp{optimal:,.0f}")
+            st.markdown("**Titik A: Hanya Produksi Barang B (x₁=0)**")
+            st.latex(fr"""
+            \begin{{aligned}}
+            &{t_a}(0) + {t_b}x_2 = {total} \\
+            &\Rightarrow x_2 = \frac{{{total}}}{{{t_b}}} = {titik_A[1]:.1f} \\
+            &Z = {p_a}(0) + {p_b}({titik_A[1]:.1f}) = \boxed{{Rp{p_b*titik_A[1]:,.0f}}}
+            \end{{aligned}}
+            """)
+            st.metric("Nilai Z pada Titik A", f"Rp{p_b*titik_A[1]:,.0f}")
         
         with cols[1]:
-            st.subheader("Visualisasi")
-            st.pyplot(fig)
-            
-            # Download
-            buf = BytesIO()
-            plt.savefig(buf, format="png")
-            st.download_button("💾 Download Grafik", buf.getvalue(), "optimasi.png")
+            st.markdown("**Titik B: Hanya Produksi Barang A (x₂=0)**")
+            st.latex(fr"""
+            \begin{{aligned}}
+            &{t_a}x_1 + {t_b}(0) = {total} \\
+            &\Rightarrow x_1 = \frac{{{total}}}{{{t_a}}} = {titik_B[0]:.1f} \\
+            &Z = {p_a}({titik_B[0]:.1f}) + {p_b}(0) = \boxed{{Rp{p_a*titik_B[0]:,.0f}}}
+            \end{{aligned}}
+            """)
+            st.metric("Nilai Z pada Titik B", f"Rp{p_a*titik_B[0]:,.0f}")
+        
+        # ===== VISUALISASI =====
+        st.header("📊 GRAFIK SOLUSI")
+        
+        fig, ax = plt.subplots(figsize=(10,6))
+        
+        # Plot garis kendala
+        x = np.linspace(0, titik_B[0], 100)
+        y = (total - t_a*x)/t_b
+        
+        ax.plot(x, y, 'b-', linewidth=2, label=f'{t_a}x₁ + {t_b}x₂ ≤ {total}')
+        ax.fill_between(x, 0, y, alpha=0.1)
+        
+        # Titik ekstrim
+        ax.plot(titik_A[0], titik_A[1], 'ro', markersize=8, label=f'Titik A (0,{titik_A[1]:.0f})')
+        ax.plot(titik_B[0], titik_B[1], 'go', markersize=8, label=f'Titik B ({titik_B[0]:.0f},0)')
+        
+        # Anotasi
+        ax.annotate(f'Z= Rp{p_b*titik_A[1]:,.0f}', xy=(0,titik_A[1]), xytext=(10,titik_A[1]+10),
+                    arrowprops=dict(facecolor='black', shrink=0.05))
+        ax.annotate(f'Z= Rp{p_a*titik_B[0]:,.0f}', xy=(titik_B[0],0), xytext=(titik_B[0]-40,20),
+                    arrowprops=dict(facecolor='black', shrink=0.05))
+        
+        ax.set_xlabel('Jumlah Barang A (x₁)', fontsize=12)
+        ax.set_ylabel('Jumlah Barang B (x₂)', fontsize=12)
+        ax.legend()
+        ax.grid(True)
+        
+        st.pyplot(fig)
+        
+        # ===== KESIMPULAN PRODUKSI =====
+        optimal_value = max(p_a*titik_B[0], p_b*titik_A[1])
+        if optimal_value == p_b*titik_A[1]:
+            solusi = f"""
+            - Produksi **Barang A** = 0 unit
+            - Produksi **Barang B** = {titik_A[1]:.0f} unit
+            """
+        else:
+            solusi = f"""
+            - Produksi **Barang A** = {titik_B[0]:.0f} unit
+            - Produksi **Barang B** = 0 unit
+            """
+        
+        st.success(f"""
+        ## 🎯 KESIMPULAN PRODUKSI OPTIMAL
+        **Kombinasi Produksi:**
+        {solusi}
+        
+        **Pendapatan Maksimum:** Rp{optimal_value:,.0f}
+        
+        **Strategi:**
+        Fokuskan produksi pada { 'Barang B' if optimal_value == p_b*titik_A[1] else 'Barang A'} 
+        untuk memaksimalkan keuntungan dengan kendala waktu produksi.
+        """)
+        
+        # Download
+        buf = BytesIO()
+        plt.savefig(buf, format="png", dpi=300)
+        st.download_button("💾 Download Grafik Solusi", buf.getvalue(), "solusi_optimasi.png")
 
+# [Bagian Model Persediaan, Model Antrian, dan Tambah Data tetap sama seperti sebelumnya]
 # =============== HALAMAN MODEL PERSEDIAAN (EOQ) ===============
 elif page == "📦 Model Persediaan (EOQ)":
     st.title("📦 MODEL PERSEDIAAN / INVENTORY MODEL (EOQ)")
@@ -210,7 +300,7 @@ elif page == "➕ Tambah Data":
 # =============== FOOTER ===============
 st.sidebar.markdown("---")
 st.sidebar.info("""
-**Versi 2.0.0**  
+**Versi 2.1.0**  
 Dikembangkan oleh:  
 *Tim Matematika Industri*  
 © 2023
