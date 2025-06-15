@@ -139,35 +139,12 @@ if st.session_state.current_page == "Beranda":
 # =============== HALAMAN MODEL BARU ===============
 elif st.session_state.current_page == "Model Baru":
     st.title("🆕 Model Baru")
-    st.warning("Fitur dalam pengembangan! Silakan kontribusi kode Anda.")
-    
-    tab1, tab2 = st.tabs(["📝 Formulir", "📊 Visualisasi"])
-    
-    with tab1:
-        st.subheader("Parameter Model")
-        model_type = st.selectbox(
-            "Jenis Model", 
-            ["Transportasi", "Proyek (CPM/PERT)", "Forecasting"]
-        )
-        
-        if model_type == "Transportasi":
-            st.number_input("Jumlah Sumber", 1, 10, 3)
-            st.number_input("Jumlah Tujuan", 1, 10, 4)
-        
-        elif model_type == "Proyek (CPM/PERT)":
-            st.number_input("Jumlah Aktivitas", 1, 50, 10)
-        
-        elif model_type == "Forecasting":
-            st.selectbox("Metode", ["Moving Average", "Exponential Smoothing"])
-    
-    with tab2:
-        st.subheader("Preview Visualisasi")
-        if model_type == "Transportasi":
-            st.image("https://via.placeholder.com/600x300?text=Diagram+Transportasi", use_container_width=True)
-        elif model_type == "Proyek (CPM/PERT)":
-            st.image("https://via.placeholder.com/600x300?text=Diagram+Jaringan", use_container_width=True)
-        else:
-            st.line_chart(np.random.randn(20, 1))
+    st.warning("Fitur dalam pengembangan...")
+    st.info("""
+    Untuk rekomendasi fitur silahkan hubungi:
+    **WhatsApp: +6283153610195**
+    """)
+    st.image("https://via.placeholder.com/600x200?text=Fitur+Sedang+Dikembangkan", use_container_width=True)
 
 # =============== HALAMAN OPTIMASI PRODUKSI ===============
 elif st.session_state.current_page == "Optimasi":
