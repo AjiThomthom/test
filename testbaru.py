@@ -1,104 +1,70 @@
-# 1. IMPORTS (tetap seperti semula)
 import streamlit as st
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
-from PIL import Image
+from io import BytesIO
+from PIL import Image, ImageDraw, ImageFont
+import base64
 
-# 2. SET PAGE CONFIG (PINDAHKAN KE SINI, SEBELUM APAPUN)
-st.set_page_config(
-    layout="wide",
-    initial_sidebar_state="expanded",
-    page_title="Analisis Data",
-    page_icon="📊",
-    menu_items={
-        'Get Help': 'https://www.extremelycoolapp.com/help',
-        'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# This is a header. This is an *extremely* cool app!"
-    }
-)
-
-# 3. KODE ANDA YANG LAIN (setelah set_page_config)
-st.title("Analisis Data")
-# ... lanjutkan dengan kode Anda yang lain ...
-
-# =============== GENERATE LOGO & HEADER ===============
+# =============== GENERATE LOGO & HEADER (VERSI UPGRADED) ===============
 def create_logo():
     try:
-        img = Image.new('RGBA', (300, 100), (0,0,0,0))
+        img = Image.new('RGBA', (200, 80), (0,0,0,0))
         draw = ImageDraw.Draw(img)
         
-        for i in range(100):
-            draw.line([(0,i), (300,i)], fill=(0, 100+i, 200))
+        # Background gradient
+        for i in range(80):
+            draw.line([(0,i), (200,i)], fill=(0, 100+i, 200))
         
+        # Text with shadow effect
         try:
-            font = ImageFont.truetype("arial.ttf", 24)
+            font = ImageFont.truetype("arial.ttf", 30)
         except:
             font = ImageFont.load_default()
+        draw.text((50, 20), "INDUSTRI 4.0", fill=(255,255,255), font=font, stroke_width=2, stroke_fill=(0,0,0))
         
-        draw.text((30, 35), "APLIKASI MODEL MATEMATIKA", 
-                fill=(255,255,255), font=font)
-        
-        img = ImageOps.expand(img, border=3, fill=(255,195,0))
         buffered = BytesIO()
         img.save(buffered, format="PNG")
         return base64.b64encode(buffered.getvalue()).decode()
     except Exception as e:
-        st.error(f"Error membuat logo: {str(e)}")
+        st.error(f"Error creating logo: {e}")
         return ""
 
 def create_header():
     try:
-        img = Image.new('RGB', (1200, 250), (33, 37, 41))
+        img = Image.new('RGB', (1000, 200), (70, 130, 180))
         draw = ImageDraw.Draw(img)
         
-        for i in range(-250, 1200, 40):
-            draw.line([(i,0), (i+300,250)], fill=(52, 58, 64), width=3)
+        # Diagonal pattern
+        for i in range(-200, 1000, 30):
+            draw.line([(i,0), (i+200,200)], fill=(100,150,200), width=2)
         
+        # Main title
         try:
-            font = ImageFont.truetype("arialbd.ttf", 48)
+            font = ImageFont.truetype("arial.ttf", 50)
         except:
             font = ImageFont.load_default()
+        draw.text((100, 60), "APLIKASI MODEL INDUSTRI", fill=(255,255,0), font=font)
         
-        draw.text((150, 80), "APLIKASI MODEL MATEMATIKA INDUSTRI", 
-                fill=(70, 200, 200), font=font)
-        
-        try:
-            subfont = ImageFont.truetype("arial.ttf", 20)
-        except:
-            subfont = ImageFont.load_default()
-        
-        draw.text((150, 150), "Alat Optimasi untuk Solusi Industri", 
-                fill=(200,200,200), font=subfont)
+        # Add small logo
+        logo_img = Image.open(BytesIO(base64.b64decode(LOGO_BASE64)))
+        logo_img = logo_img.resize((150,60))
+        img.paste(logo_img, (800, 20), logo_img)
         
         buffered = BytesIO()
-        img.save(buffered, format="JPEG", quality=90)
+        img.save(buffered, format="JPEG")
         return base64.b64encode(buffered.getvalue()).decode()
     except Exception as e:
-        st.error(f"Error membuat header: {str(e)}")
+        st.error(f"Error creating header: {e}")
         return ""
 
-# =============== KONFIGURASI APLIKASI ===============
 LOGO_BASE64 = create_logo()
 HEADER_BASE64 = create_header()
 
-if 'current_page' not in st.session_state:
-    st.session_state.current_page = "Beranda"
-
-def change_page(page_name):
-    st.session_state.current_page = page_name
-
+# =============== KONFIGURASI APLIKASI ===============
 st.set_page_config(
     layout="wide", 
     page_title="Aplikasi Model Industri",
-    page_icon="🧮",
-    menu_items={
-        'Get Help': 'https://wa.me/6283153610195',
-        'Report a bug': None,
-        'About': "Aplikasi untuk optimasi proses industri"
-    }
+    page_icon="🏭"
 )
 
 if 'current_page' not in st.session_state:
@@ -107,114 +73,107 @@ if 'current_page' not in st.session_state:
 def change_page(page_name):
     st.session_state.current_page = page_name
 
-# =============== NAVIGASI SIDEBAR ===============
+# =============== NAVIGASI SIDEBAR (DENGAN TOMBOL TAMBAHAN) ===============
 with st.sidebar:
     st.image(f"data:image/png;base64,{LOGO_BASE64}", use_container_width=True)
-    st.title("MENU UTAMA")
+    st.title("NAVIGASI")
     
-    # Tombol navigasi dengan ikon menarik
-    nav_options = [
-        ("🏠", "Beranda"),
-        ("📊", "Optimasi"),
-        ("📦", "EOQ"),
-        ("🔄", "Antrian"),
-        ("⏱", "Johnson")
-    ]
-    
-    for icon, page in nav_options:
-        st.button(f"{icon} {page}", 
-                 on_click=change_page, 
-                 args=(page,), 
-                 use_container_width=True,
-                 key=f"nav_{page}")
-    
-    # Tambahkan tombol Model Baru dengan style berbeda
-    st.markdown("---")
-    st.button("✨ MODEL BARU", 
-             on_click=change_page, 
-             args=("Model Baru",),
-             use_container_width=True,
-             type="primary")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.button("🏠 Beranda", on_click=change_page, args=("Beranda",), use_container_width=True)
+        st.button("📊 Optimasi", on_click=change_page, args=("Optimasi",), use_container_width=True)
+        st.button("⏱ Johnson", on_click=change_page, args=("Johnson",), use_container_width=True)
+    with col2:
+        st.button("📦 EOQ", on_click=change_page, args=("EOQ",), use_container_width=True)
+        st.button("🔄 Antrian", on_click=change_page, args=("Antrian",), use_container_width=True)
+        st.button("➕ Model Baru", on_click=change_page, args=("Model Baru",), use_container_width=True)
     
     st.markdown("---")
     st.info("""
-    **Kontak Pengembang:**
-    [WhatsApp](https://wa.me/6283153610195)
-    
-    **Versi 3.0**  
+    **Versi 2.2.1**  
+    Dikembangkan oleh:  
+    *Megatama Setiaji & Ronnan Ghazi*  
     🇮🇩 🇵🇸  
     © 2025
     """)
 
-# =============== HALAMAN BERANDA ===============
+# =============== HALAMAN BERANDA (DIPERBAIKI) ===============
 if st.session_state.current_page == "Beranda":
     st.title("Selamat Datang di Aplikasi Model Matematika Industri")
     st.image(f"data:image/jpeg;base64,{HEADER_BASE64}", use_container_width=True)
     
-    # Metrics cards
     cols = st.columns(4)
-    features = [
-        ("📊", "Optimasi Produksi", "Linear Programming untuk maksimalkan keuntungan", "#3498db"),
-        ("📦", "Manajemen Inventori", "Model EOQ untuk optimasi persediaan", "#2ecc71"),
-        ("🔄", "Analisis Antrian", "Model M/M/1 untuk sistem pelayanan", "#e74c3c"),
-        ("⏱", "Penjadwalan", "Johnson's Rule untuk minimasi makespan", "#f39c12")
-    ]
-    
-    for col, (icon, title, desc, color) in zip(cols, features):
-        with col:
-            st.markdown(f"""
-            <div style="
-                border-left: 5px solid {color};
-                padding: 15px;
-                background-color: #f8f9fa;
-                border-radius: 5px;
-                margin-bottom: 20px;
-                height: 180px;
-            ">
-                <h3>{icon} {title}</h3>
-                <p>{desc}</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    # Panduan Cepat
-    with st.expander("📚 PANDUAN PENGGUNAAN", expanded=True):
-        st.write("""
-        1. Pilih menu di sidebar sesuai kebutuhan
-        2. Masukkan parameter yang diminta
-        3. Klik tombol hitung untuk melihat hasil
-        4. Gunakan menu atas untuk ekspor hasil
+    with cols[0]:
+        st.info("""
+        **📊 Optimasi Produksi**
+        - Linear Programming
+        - Maksimalkan keuntungan
         """)
-        st.image("https://via.placeholder.com/600x200?text=Tutorial+Penggunaan", use_container_width=True)
+    with cols[1]:
+        st.success("""
+        **📦 Model Persediaan (EOQ)**
+        - Economic Order Quantity
+        - Optimasi inventory
+        """)
+    with cols[2]:
+        st.warning("""
+        **🔄 Model Antrian**
+        - Analisis M/M/1
+        - Hitung waktu tunggu
+        """)
+    with cols[3]:
+        st.info("""
+        **⏱ Optimasi Penjadwalan**
+        - Johnson's Rule
+        - Minimasi makespan
+        """)
+    
+    st.markdown("---")
+    st.subheader("📚 Panduan Cepat")
+    st.write("""
+    1. Pilih menu di sidebar untuk mengakses fitur
+    2. Masukkan parameter sesuai kasus Anda
+    3. Klik tombol hitung untuk melihat hasil
+    """)
 
 # =============== HALAMAN MODEL BARU ===============
 elif st.session_state.current_page == "Model Baru":
-    st.title("✨ FITUR BARU")
-    st.image("https://via.placeholder.com/800x300?text=Fitur+Sedang+Dikembangkan", use_container_width=True)
+    st.title("🆕 Model Baru")
+    st.warning("Fitur dalam pengembangan! Silakan kontribusi kode Anda.")
     
-    with st.container(border=True):
-        st.warning("""
-        ## 🚧 FITUR DALAM PENGEMBANGAN
-        Kami sedang mengembangkan fitur-fitur baru untuk aplikasi ini.
-        """)
+    tab1, tab2 = st.tabs(["📝 Formulir", "📊 Visualisasi"])
+    
+    with tab1:
+        st.subheader("Parameter Model")
+        model_type = st.selectbox(
+            "Jenis Model", 
+            ["Transportasi", "Proyek (CPM/PERT)", "Forecasting"]
+        )
         
-        st.info("""
-        ### 💡 Punya ide fitur?
-        Kirim saran Anda via:
-        **WhatsApp: [+62 831-5361-0195](https://wa.me/6283153610195)**
-        """)
+        if model_type == "Transportasi":
+            st.number_input("Jumlah Sumber", 1, 10, 3)
+            st.number_input("Jumlah Tujuan", 1, 10, 4)
         
-        st.markdown("""
-        <div style="text-align: center; margin-top: 30px;">
-            <img src="https://via.placeholder.com/150?text=Coming+Soon" width="200">
-            <p style="font-style: italic;">Versi berikutnya akan segera hadir</p>
-        </div>
-        """, unsafe_allow_html=True)
+        elif model_type == "Proyek (CPM/PERT)":
+            st.number_input("Jumlah Aktivitas", 1, 50, 10)
+        
+        elif model_type == "Forecasting":
+            st.selectbox("Metode", ["Moving Average", "Exponential Smoothing"])
+    
+    with tab2:
+        st.subheader("Preview Visualisasi")
+        if model_type == "Transportasi":
+            st.image("https://via.placeholder.com/600x300?text=Diagram+Transportasi", use_container_width=True)
+        elif model_type == "Proyek (CPM/PERT)":
+            st.image("https://via.placeholder.com/600x300?text=Diagram+Jaringan", use_container_width=True)
+        else:
+            st.line_chart(np.random.randn(20, 1))
 
 # =============== HALAMAN OPTIMASI PRODUKSI ===============
 elif st.session_state.current_page == "Optimasi":
-    st.title("📊 OPTIMASI PRODUKSI")
+    st.title("📈 OPTIMASI PRODUKSI")
     
-    with st.expander("📚 CONTOH KASUS", expanded=True):
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Perusahaan Furniture")
         st.markdown("""
         **PT Kayu Indah** memproduksi:
@@ -279,13 +238,15 @@ elif st.session_state.current_page == "Optimasi":
         
         total_time = st.number_input("Total waktu tersedia (jam)", 120, key="total")
 
-    if st.button("🧮 HITUNG SOLUSI OPTIMAL", type="primary", use_container_width=True):
+    if st.button("🧮 HITUNG SOLUSI DETAIL", type="primary", use_container_width=True):
+        # Implementasi solusi
         titik_A = (0, 0)
         titik_B = (max1, 0)
         titik_C = (max1, min((total_time - t1*max1)/t2, max2))
         titik_D = (min((total_time - t2*max2)/t1, max1), max2)
         titik_E = (0, min(total_time/t2, max2))
         
+        # Hitung nilai Z di setiap titik
         nilai_Z = [
             p1*titik_A[0] + p2*titik_A[1],
             p1*titik_B[0] + p2*titik_B[1],
@@ -298,7 +259,7 @@ elif st.session_state.current_page == "Optimasi":
         optimal_point = [titik_A, titik_B, titik_C, titik_D, titik_E][optimal_idx]
 
         st.markdown("---")
-        st.header("📊 HASIL PERHITUNGAN")
+        st.header("📝 HASIL PERHITUNGAN")
         
         cols = st.columns(2)
         with cols[0]:
@@ -318,7 +279,7 @@ elif st.session_state.current_page == "Optimasi":
             st.write(f"E(0,{titik_E[1]:.0f}) = Rp{nilai_Z[4]:,.0f}")
         
         with cols[1]:
-            st.subheader("Visualisasi Solusi")
+            st.subheader("Grafik Solusi")
             fig, ax = plt.subplots(figsize=(8,6))
             x = np.linspace(0, max1*1.1, 100)
             y = (total_time - t1*x)/t2
@@ -346,7 +307,7 @@ elif st.session_state.current_page == "Optimasi":
 elif st.session_state.current_page == "EOQ":
     st.title("📦 MODEL PERSEDIAAN (EOQ)")
     
-    with st.expander("📚 CONTOH KASUS", expanded=True):
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Toko Bahan Bangunan")
         st.markdown("""
         **Toko Bangun Jaya** memiliki data:
@@ -416,7 +377,7 @@ elif st.session_state.current_page == "EOQ":
         total_cost = np.sqrt(2*D*S*H)
         
         st.markdown("---")
-        st.header("📊 HASIL PERHITUNGAN")
+        st.header("📝 HASIL PERHITUNGAN EOQ")
         
         cols = st.columns(2)
         with cols[0]:
@@ -456,7 +417,7 @@ elif st.session_state.current_page == "EOQ":
 elif st.session_state.current_page == "Antrian":
     st.title("🔄 MODEL ANTRIAN (M/M/1)")
     
-    with st.expander("📚 CONTOH KASUS", expanded=True):
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Klinik Kesehatan")
         st.markdown("""
         **Klinik Sehat Bahagia** memiliki:
@@ -527,7 +488,7 @@ elif st.session_state.current_page == "Antrian":
             total_waiting_cost = Wq*λ*cost_waiting
             
             st.markdown("---")
-            st.header("📊 HASIL PERHITUNGAN")
+            st.header("📝 HASIL PERHITUNGAN")
             
             cols = st.columns(2)
             with cols[0]:
@@ -550,11 +511,12 @@ elif st.session_state.current_page == "Antrian":
                 \end{{aligned}}
                 """)
             
+            # Analisis biaya
             st.subheader("Analisis Biaya")
             st.write(f"**Biaya menunggu total:** Rp{total_waiting_cost:,.0f}/jam")
             
             if cost_add_server > 0:
-                new_μ = μ + 15
+                new_μ = μ + 15  # Asumsi penambahan 1 server meningkatkan μ sebesar 15
                 new_Wq = (λ)/(new_μ*(new_μ-λ))
                 new_cost = new_Wq*λ*cost_waiting + cost_add_server
                 improvement = (total_waiting_cost - new_cost)/total_waiting_cost*100
@@ -564,6 +526,7 @@ elif st.session_state.current_page == "Antrian":
                 st.write(f"- Total biaya baru: Rp{new_cost:,.0f}/jam")
                 st.write(f"- Penghematan: {improvement:.1f}%")
             
+            # Interpretasi Utilisasi
             util_status = ""
             if ρ <= 0.7:
                 util_status = "Optimal (70% atau kurang)"
@@ -587,9 +550,9 @@ elif st.session_state.current_page == "Antrian":
 
 # =============== HALAMAN JOHNSON ===============
 elif st.session_state.current_page == "Johnson":
-    st.title("⏱ PENJADWALAN (JOHNSON'S RULE)")
+    st.title("⏱ PENJADWALAN DENGAN JOHNSON'S RULE")
     
-    with st.expander("📚 CONTOH KASUS", expanded=True):
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Bengkel Mobil")
         st.markdown("""
         **Bengkel Cepat** memiliki 5 pekerjaan dengan waktu proses:
@@ -677,6 +640,7 @@ elif st.session_state.current_page == "Johnson":
         jobs = list(zip(m1_times, m2_times))
 
     if st.button("🧮 HITUNG JADWAL OPTIMAL", type="primary", use_container_width=True):
+        # Implementasi Johnson's Rule
         group1 = [(i, m1, m2) for i, (m1, m2) in enumerate(jobs) if m1 <= m2]
         group2 = [(i, m2, m1) for i, (m1, m2) in enumerate(jobs) if m1 > m2]
         
@@ -685,16 +649,19 @@ elif st.session_state.current_page == "Johnson":
         
         sequence = [x[0] for x in group1_sorted] + [x[0] for x in group2_sorted]
         
+        # Hitung makespan
         m1_time = 0
         m2_time = 0
         m1_schedule = []
         m2_schedule = []
         
         for job in sequence:
+            # Mesin 1
             m1_start = m1_time
             m1_time += jobs[job][0]
             m1_schedule.append((job, m1_start, m1_time))
             
+            # Mesin 2
             m2_start = max(m1_time, m2_time)
             m2_time = m2_start + jobs[job][1]
             m2_schedule.append((job, m2_start, m2_time))
@@ -702,7 +669,7 @@ elif st.session_state.current_page == "Johnson":
         makespan = m2_time
         
         st.markdown("---")
-        st.header("📊 HASIL PENJADWALAN")
+        st.header("📝 HASIL PENJADWALAN")
         
         cols = st.columns(2)
         with cols[0]:
@@ -719,12 +686,14 @@ elif st.session_state.current_page == "Johnson":
             st.subheader("Diagram Gantt")
             fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10,6))
             
+            # Machine 1
             for job, start, end in m1_schedule:
                 ax1.barh("Mesin 1", end-start, left=start, 
                         label=f'P{job+1}')
                 ax1.text(start + (end-start)/2, 0, f'P{job+1}', 
                         ha='center', va='center', color='white')
             
+            # Machine 2
             for job, start, end in m2_schedule:
                 ax2.barh("Mesin 2", end-start, left=start)
                 ax2.text(start + (end-start)/2, 0, f'P{job+1}', 
@@ -756,30 +725,15 @@ elif st.session_state.current_page == "Johnson":
 # =============== STYLE CUSTOM ===============
 st.markdown("""
 <style>
-    /* Tombol lebih menarik */
     .stButton>button {
         transition: all 0.3s;
-        border-radius: 8px;
     }
     .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: scale(1.05);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
-    
-    /* Font konsisten */
     .st-emotion-cache-1qg05tj {
         font-family: "Arial", sans-serif;
-    }
-    
-    /* Warna tema */
-    :root {
-        --primary: #3498db;
-        --secondary: #2ecc71;
-    }
-    
-    /* Header cards */
-    .stMarkdown h3 {
-        color: var(--primary);
     }
 </style>
 """, unsafe_allow_html=True)
