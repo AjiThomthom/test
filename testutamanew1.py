@@ -58,13 +58,6 @@ with st.sidebar:
         st.button("📦 EOQ", on_click=change_page, args=("EOQ",), use_container_width=True)
         st.button("🔄 Antrian", on_click=change_page, args=("Antrian",), use_container_width=True)
     
-    st.markdown("---")
-    st.info("""
-    **Versi 2.2.0**  
-    Dikembangkan oleh:  
-    *Tim Matematika Industri*  
-    © 2023
-    """)
 
 # =============== HALAMAN BERANDA ===============
 if st.session_state.current_page == "Beranda":
