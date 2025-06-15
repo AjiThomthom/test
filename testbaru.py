@@ -75,7 +75,7 @@ def change_page(page_name):
 
 # =============== NAVIGASI SIDEBAR (DENGAN TOMBOL TAMBAHAN) ===============
 with st.sidebar:
-    st.image(f"data:image/png;base64,{LOGO_BASE64}", use_column_width=True)
+    st.image(f"data:image/png;base64,{LOGO_BASE64}", use_container_width=True)
     st.title("NAVIGASI")
     
     col1, col2 = st.columns(2)
@@ -102,7 +102,7 @@ if st.session_state.current_page == "Beranda":
     st.title("Selamat Datang di Aplikasi Model Matematika Industri")
     st.image(f"data:image/jpeg;base64,{HEADER_BASE64}", use_container_width=True)
     
-    cols = st.columns(4)  # Diubah dari 3 menjadi 4 kolom
+    cols = st.columns(4)
     with cols[0]:
         st.info("""
         **📊 Optimasi Produksi**
@@ -163,16 +163,17 @@ elif st.session_state.current_page == "Model Baru":
     with tab2:
         st.subheader("Preview Visualisasi")
         if model_type == "Transportasi":
-            st.image("https://via.placeholder.com/600x300?text=Diagram+Transportasi", use_column_width=True)
+            st.image("https://via.placeholder.com/600x300?text=Diagram+Transportasi", use_container_width=True)
         elif model_type == "Proyek (CPM/PERT)":
-            st.image("https://via.placeholder.com/600x300?text=Diagram+Jaringan", use_column_width=True)
+            st.image("https://via.placeholder.com/600x300?text=Diagram+Jaringan", use_container_width=True)
         else:
             st.line_chart(np.random.randn(20, 1))
 
 # =============== HALAMAN OPTIMASI PRODUKSI ===============
 elif st.session_state.current_page == "Optimasi":
     st.title("📈 OPTIMASI PRODUKSI")
-        with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
+    
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Perusahaan Furniture")
         st.markdown("""
         **PT Kayu Indah** memproduksi:
@@ -305,7 +306,8 @@ elif st.session_state.current_page == "Optimasi":
 # =============== HALAMAN EOQ ===============
 elif st.session_state.current_page == "EOQ":
     st.title("📦 MODEL PERSEDIAAN (EOQ)")
-        with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
+    
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Toko Bahan Bangunan")
         st.markdown("""
         **Toko Bangun Jaya** memiliki data:
@@ -414,7 +416,8 @@ elif st.session_state.current_page == "EOQ":
 # =============== HALAMAN ANTRIAN ===============
 elif st.session_state.current_page == "Antrian":
     st.title("🔄 MODEL ANTRIAN (M/M/1)")
-        with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
+    
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Klinik Kesehatan")
         st.markdown("""
         **Klinik Sehat Bahagia** memiliki:
@@ -548,7 +551,8 @@ elif st.session_state.current_page == "Antrian":
 # =============== HALAMAN JOHNSON ===============
 elif st.session_state.current_page == "Johnson":
     st.title("⏱ PENJADWALAN DENGAN JOHNSON'S RULE")
-        with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
+    
+    with st.expander("📚 Contoh Soal & Pembahasan", expanded=True):
         st.subheader("Studi Kasus: Bengkel Mobil")
         st.markdown("""
         **Bengkel Cepat** memiliki 5 pekerjaan dengan waktu proses:
@@ -717,7 +721,6 @@ elif st.session_state.current_page == "Johnson":
         **Idle Time Mesin 1:** {makespan - sum(m1 for m1,m2 in jobs):.1f} jam  
         **Idle Time Mesin 2:** {makespan - sum(m2 for m1,m2 in jobs):.1f} jam
         """)
-
 
 # =============== STYLE CUSTOM ===============
 st.markdown("""
