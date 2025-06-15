@@ -61,7 +61,7 @@ with st.sidebar:
 
 # =============== HALAMAN BERANDA ===============
 if st.session_state.current_page == "Beranda":
-    st.title("Selamat Datang di Aplikasi Model Industri")
+    st.title("Selamat Datang di Aplikasi Model Matematika Industri")
     st.image(f"data:image/jpeg;base64,{HEADER_BASE64}", use_container_width=True)
     
     cols = st.columns(3)
@@ -649,6 +649,7 @@ st.sidebar.markdown("---")
 st.sidebar.info("""
 **Versi 2.2.0**  
 Dikembangkan oleh:  
-*Tim Matematika Industri*  
-© 2023
+*Megatama Setiaji & Ronnan Ghazi Rizki Akbar* 
+IndonesianPalestine
+© 2025
 """)
