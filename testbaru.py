@@ -1,24 +1,27 @@
-# HARUS di baris pertama!
+# Move these imports to the top
 import streamlit as st
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+from PIL import Image
 
-# HARUS di baris kedua!
+# Set page config FIRST
 st.set_page_config(
     layout="wide",
-    page_title="Aplikasi Model Industri",
-    page_icon="🏭",
+    initial_sidebar_state="expanded",
+    page_title="Analisis Data",
+    page_icon="📊",
     menu_items={
-        'Get Help': 'https://wa.me/6283153610195',
-        'Report a bug': None,
-        'About': "Aplikasi untuk optimasi proses industri"
+        'Get Help': 'https://www.extremelycoolapp.com/help',
+        'Report a bug': "https://www.extremelycoolapp.com/bug",
+        'About': "# This is a header. This is an *extremely* cool app!"
     }
 )
 
-# Baru import library lain
-import numpy as np
-import matplotlib.pyplot as plt
-from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont, ImageOps
-import base64
+# Then proceed with the rest of your code
+st.title("Analisis Data")
 
 # =============== GENERATE LOGO & HEADER ===============
 def create_logo():
