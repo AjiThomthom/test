@@ -83,15 +83,13 @@ if st.session_state.current_page == "Beranda":
         - Analisis M/M/1
         - Hitung waktu tunggu
         """)
+    with cols[3]:
+        st.info("""
+        **⏱ Optimasi Penjadwalan (JOHNSON'S RULE)**
+        - Menentukan urutan pekerjaan optimal
+        - Meminimalkan waktu penyelesaian (makespan)
+        """)
     
-    st.markdown("---")
-    st.subheader("🎯 Fitur Baru: Penjadwalan Johnson's Rule")
-    st.markdown("""
-    Sekarang dengan algoritma penjadwalan **Johnson's Rule** untuk:
-    - Menentukan urutan pekerjaan optimal
-    - Meminimalkan waktu penyelesaian (makespan)
-    - Visualisasi diagram Gantt
-    """)
 
 # =============== HALAMAN OPTIMASI PRODUKSI ===============
 elif st.session_state.current_page == "Optimasi":
