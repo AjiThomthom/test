@@ -1,80 +1,87 @@
+# HARUS di baris pertama!
 import streamlit as st
+st.set_page_config(
+    layout="wide",
+    page_title="Aplikasi Model Industri",
+    page_icon="🏭",
+    menu_items={
+        'Get Help': 'https://wa.me/6283153610195',
+        'Report a bug': None,
+        'About': "Aplikasi untuk optimasi proses industri"
+    }
+)
+
+# Baru kemudian import library lain
 import numpy as np
 import matplotlib.pyplot as plt
 from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 import base64
 
-# =============== GENERATE LOGO & HEADER (VERSI UPGRADED) ===============
+# =============== GENERATE LOGO & HEADER ===============
 def create_logo():
     try:
-        img = Image.new('RGBA', (250, 90), (0,0,0,0))  # Lebar ditambah untuk menampung teks lebih panjang
+        img = Image.new('RGBA', (300, 100), (0,0,0,0))
         draw = ImageDraw.Draw(img)
         
-        # Background gradient biru
-        for i in range(90):
-            draw.line([(0,i), (250,i)], fill=(0, 100+i, 200))
+        for i in range(100):
+            draw.line([(0,i), (300,i)], fill=(0, 100+i, 200))
         
-        # Text dengan shadow
         try:
-            font = ImageFont.truetype("arial.ttf", 22)  # Ukuran font disesuaikan
+            font = ImageFont.truetype("arial.ttf", 24)
         except:
             font = ImageFont.load_default()
         
-        # Teks utama
-        draw.text((20, 30), "APLIKASI MODEL MATEMATIKA", fill=(255,255,255), font=font)
+        draw.text((30, 35), "APLIKASI MODEL MATEMATIKA", 
+                fill=(255,255,255), font=font)
         
-        # Border emas
         img = ImageOps.expand(img, border=3, fill=(255,195,0))
-        
         buffered = BytesIO()
         img.save(buffered, format="PNG")
         return base64.b64encode(buffered.getvalue()).decode()
     except Exception as e:
-        st.error(f"Error creating logo: {e}")
         return ""
 
 def create_header():
     try:
-        img = Image.new('RGB', (1200, 250), (33, 37, 41))  # Warna dark modern
+        img = Image.new('RGB', (1200, 250), (33, 37, 41))
         draw = ImageDraw.Draw(img)
         
-        # Garis diagonal efek teknis
         for i in range(-250, 1200, 40):
             draw.line([(i,0), (i+300,250)], fill=(52, 58, 64), width=3)
         
-        # Judul utama
         try:
             font = ImageFont.truetype("arialbd.ttf", 48)
         except:
             font = ImageFont.load_default()
         
-        draw.text((150, 80), "APLIKASI MODEL MATEMATIKA INDUSTRI", fill=(70, 200, 200), font=font)
+        draw.text((150, 80), "APLIKASI MODEL MATEMATIKA INDUSTRI", 
+                fill=(70, 200, 200), font=font)
         
-        # Subjudul
         try:
             subfont = ImageFont.truetype("arial.ttf", 20)
         except:
             subfont = ImageFont.load_default()
         
-        draw.text((150, 150), "Alat Optimasi untuk Solusi Industri", fill=(200,200,200), font=subfont)
-        
-        # Tambahkan logo kecil
-        logo_img = Image.open(BytesIO(base64.b64decode(LOGO_BASE64)))
-        logo_img = logo_img.resize((180,70))
-        img.paste(logo_img, (900, 30))
+        draw.text((150, 150), "Alat Optimasi untuk Solusi Industri", 
+                fill=(200,200,200), font=subfont)
         
         buffered = BytesIO()
         img.save(buffered, format="JPEG", quality=90)
         return base64.b64encode(buffered.getvalue()).decode()
     except Exception as e:
-        st.error(f"Error creating header: {e}")
         return ""
 
+# =============== KONFIGURASI APLIKASI ===============
 LOGO_BASE64 = create_logo()
 HEADER_BASE64 = create_header()
 
-# =============== KONFIGURASI APLIKASI ===============
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = "Beranda"
+
+def change_page(page_name):
+    st.session_state.current_page = page_name
+
 st.set_page_config(
     layout="wide", 
     page_title="Aplikasi Model Industri",
