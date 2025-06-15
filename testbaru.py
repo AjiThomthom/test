@@ -1,4 +1,4 @@
-# Move these imports to the top
+# 1. IMPORTS (tetap seperti semula)
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,7 +7,7 @@ import seaborn as sns
 import plotly.express as px
 from PIL import Image
 
-# Set page config FIRST
+# 2. SET PAGE CONFIG (PINDAHKAN KE SINI, SEBELUM APAPUN)
 st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
@@ -20,8 +20,9 @@ st.set_page_config(
     }
 )
 
-# Then proceed with the rest of your code
+# 3. KODE ANDA YANG LAIN (setelah set_page_config)
 st.title("Analisis Data")
+# ... lanjutkan dengan kode Anda yang lain ...
 
 # =============== GENERATE LOGO & HEADER ===============
 def create_logo():
