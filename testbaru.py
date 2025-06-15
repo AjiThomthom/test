@@ -1,5 +1,7 @@
 # HARUS di baris pertama!
 import streamlit as st
+
+# HARUS di baris kedua!
 st.set_page_config(
     layout="wide",
     page_title="Aplikasi Model Industri",
@@ -11,7 +13,7 @@ st.set_page_config(
     }
 )
 
-# Baru kemudian import library lain
+# Baru import library lain
 import numpy as np
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -40,6 +42,7 @@ def create_logo():
         img.save(buffered, format="PNG")
         return base64.b64encode(buffered.getvalue()).decode()
     except Exception as e:
+        st.error(f"Error membuat logo: {str(e)}")
         return ""
 
 def create_header():
@@ -70,6 +73,7 @@ def create_header():
         img.save(buffered, format="JPEG", quality=90)
         return base64.b64encode(buffered.getvalue()).decode()
     except Exception as e:
+        st.error(f"Error membuat header: {str(e)}")
         return ""
 
 # =============== KONFIGURASI APLIKASI ===============
